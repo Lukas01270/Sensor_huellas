@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Huellas ESP32</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1> Sistema de Huellas ESP32</h1>
+        </header>
+
+        <!-- 🔔 SECCIÓN DE REGISTRO AUTOMÁTICO -->
+        <section class="registro-pendiente" id="registroPendiente">
+            <div class="pendiente-header">
+                <h3> Huella Detectada - Registrar</h3>
+            </div>
+            <div class="pendiente-content">
+                <p><strong>ID de Huella:</strong> <span id="fingerIdPendiente">-</span></p>
+                <form id="formRegistroPendiente" class="pendiente-form">
+                    <input type="text" id="nombrePendiente" placeholder="Ingrese nombre para esta huella" required>
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-success">✅ Guardar Huella</button>
+                        <button type="button" onclick="cancelarRegistro()" class="btn btn-cancel">❌ Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- 📝 REGISTRO MANUAL -->
+        <section class="registro-manual">
+            <h2> Registrar Nombre de Huella (Manual)</h2>
+            <form id="registerForm" class="manual-form">
+                <div class="form-group">
+                    <input type="text" id="fingerId" placeholder="ID de Huella" class="form-input">
+                    <input type="text" id="name" placeholder="Nombre" class="form-input">
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </form>
+        </section>
+
+        <!-- 📊 FILTROS DE FECHA -->
+        <section class="filtros-container">
+            <h3> Filtros de Registros</h3>
+            <div class="filtros-form">
+                <label for="filtroFecha">Mostrar registros del día:</label>
+                <input type="date" id="filtroFecha">
+                <button onclick="cargarRegistros()" class="btn btn-primary"> Filtrar</button>
+                <button onclick="cargarRegistrosHoy()" class="btn btn-success"> Hoy</button>
+                <button onclick="cargarRegistros()" class="btn btn-secondary"> Todos</button>
+            </div>
+            <div id="estadoFiltro" class="estado-filtro"></div>
+        </section>
+
+        <!-- 📋 LISTA DE HUELLAS REGISTRADAS -->
+        <section class="huellas-registradas">
+            <h2> Huellas Registradas</h2>
+            <div id="estadisticasContainer" class="estadisticas">
+                <!-- Las estadísticas se cargan automáticamente -->
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th class="columna-fecha">Fecha</th>
+                            <th class="columna-hora">Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable">
+                        <!-- Los datos se cargan automáticamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

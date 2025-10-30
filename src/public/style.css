@@ -1,0 +1,395 @@
+/* ===== RESET Y ESTILOS GENERALES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #240680 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* ===== HEADER ===== */
+header {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+/* ===== SECCIÓN REGISTRO PENDIENTE ===== */
+.registro-pendiente {
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    border: 3px solid #f39c12;
+    margin: 20px;
+    border-radius: 12px;
+    display: none;
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pendiente-header {
+    background: #f39c12;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 12px 12px 0 0;
+}
+
+.pendiente-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.pendiente-content {
+    padding: 20px;
+}
+
+.pendiente-content p {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.pendiente-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* ===== SECCIÓN REGISTRO MANUAL ===== */
+.registro-manual {
+    padding: 30px;
+    background: #f8f9fa;
+    margin: 20px;
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+}
+
+.registro-manual h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+.manual-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* ===== FORMULARIOS ===== */
+.form-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* ===== BOTONES ===== */
+.button-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #27ae60, #229954);
+    color: white;
+}
+
+.btn-cancel {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+    color: white;
+}
+
+/* ===== FILTROS ===== */
+.filtros-container {
+    background: #f8f9fa;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+}
+
+.filtros-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.filtros-form label {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.filtros-form input[type="date"] {
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.estado-filtro {
+    padding: 10px;
+    background: #e3f2fd;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+/* ===== ESTADÍSTICAS ===== */
+.estadisticas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.tarjeta-estadistica {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.tarjeta-estadistica h4 {
+    margin: 0 0 10px 0;
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
+
+.tarjeta-estadistica .valor {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #3498db;
+}
+
+/* ===== SECCIÓN HUELLAS REGISTRADAS ===== */
+.huellas-registradas {
+    padding: 30px;
+}
+
+.huellas-registradas h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+.table-container {
+    overflow-x: auto;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* ===== TABLA ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th {
+    background: linear-gradient(135deg, #34495e, #2c3e50);
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid #ecf0f1;
+    font-size: 0.95rem;
+}
+
+tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ===== COLUMNAS ESPECIALES ===== */
+.columna-hora {
+    width: 120px;
+    font-family: 'Courier New', monospace;
+}
+
+.columna-fecha {
+    width: 120px;
+    font-weight: 600;
+}
+
+/* ===== ESTADOS ESPECIALES ===== */
+.no-data {
+    text-align: center;
+    color: #7f8c8d;
+    font-style: italic;
+    padding: 40px;
+}
+
+.error-message {
+    background: #e74c3c;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+    text-align: center;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .container {
+        margin: 10px;
+        border-radius: 10px;
+    }
+    
+    header {
+        padding: 20px;
+    }
+    
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .registro-manual,
+    .huellas-registradas,
+    .filtros-container {
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    .form-group {
+        flex-direction: column;
+    }
+    
+    .form-input {
+        min-width: 100%;
+    }
+    
+    .button-group {
+        flex-direction: column;
+    }
+    
+    .filtros-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filtros-form input[type="date"] {
+        width: 100%;
+    }
+    
+    th, td {
+        padding: 10px 8px;
+        font-size: 0.9rem;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .estadisticas {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    header h1 {
+        font-size: 1.6rem;
+    }
+    
+    .registro-manual h2,
+    .huellas-registradas h2 {
+        font-size: 1.4rem;
+    }
+    
+    .columna-hora,
+    .columna-fecha {
+        width: 80px;
+        font-size: 0.8rem;
+    }
+}
