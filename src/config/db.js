@@ -8,7 +8,7 @@ export const db = await mysql.createConnection({
   user: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "sensor_huellas",
-  port: process.env.MYSQLPORT || 3306,
+  port: process.env.DB_PORT || 3308,
 });
 
 console.log("✅ Conectado a la base de datos MySQL");
