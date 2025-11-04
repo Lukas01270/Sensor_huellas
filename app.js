@@ -2,7 +2,7 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import fingerprintRoutes from "./src/routes/fingerprintRoutes.js";
-import { db } from "./src/config/db.js"; // 👈 Importa la conexión a la base de datos
+import { pool } from "./src/config/db.js"; // 👈 CAMBIADO: db → pool
 
 const app = express();
 app.use(express.json());
@@ -20,14 +20,15 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "src", "public", "index.html"));
 });
 
-// 📊 NUEVA RUTA: Página para ver registros en tiempo real (AGREGA ESTO)
+// 📊 RUTA PARA VER REGISTROS EN TIEMPO REAL
 app.get("/lista", async (req, res) => {
   try {
-    const [registros] = await db.execute(`
+    const { rows: registros } = await pool.query(`
       SELECT * FROM huellas 
       ORDER BY fecha_registro DESC
     `);
     
+    // ... (el resto del código de /lista que ya tienes)
     let html = `
       <html>
         <head>

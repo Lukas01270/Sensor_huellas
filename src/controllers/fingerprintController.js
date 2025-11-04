@@ -1,4 +1,4 @@
-import { db } from '../config/db.js';
+import { pool } from '../config/db.js';
 
 // 📝 Variable temporal para almacenar huellas pendientes de registro
 let huellasPendientes = new Map();
@@ -24,8 +24,8 @@ const registrarHuella = async (req, res) => {
         }
         
         // Verificar si ya existe una huella con ese finger_id
-        const checkSql = "SELECT * FROM huellas WHERE finger_id = ?";
-        const [existing] = await db.query(checkSql, [finger_id]);
+        const checkSql = "SELECT * FROM huellas WHERE finger_id = $1";
+        const { rows: existing } = await pool.query(checkSql, [finger_id]);
         
         if (existing.length > 0) {
             return res.status(400).json({
@@ -34,8 +34,8 @@ const registrarHuella = async (req, res) => {
             });
         }
         
-        const sql = "INSERT INTO huellas (finger_id, nombre) VALUES (?, ?)";
-        const [result] = await db.query(sql, [finger_id, nombre.trim()]);
+        const sql = "INSERT INTO huellas (finger_id, nombre) VALUES ($1, $2) RETURNING *";
+        const { rows: result } = await pool.query(sql, [finger_id, nombre.trim()]);
         
         // 📌 Eliminar de pendientes si estaba ahí
         huellasPendientes.delete(finger_id.toString());
@@ -43,7 +43,7 @@ const registrarHuella = async (req, res) => {
         res.json({ 
             success: true, 
             message: 'Huella registrada correctamente',
-            id: result.insertId 
+            id: result[0].id 
         });
     } catch (error) {
         console.error('Error al registrar huella:', error);
@@ -59,7 +59,7 @@ const registrarHuella = async (req, res) => {
 const listarHuellas = async (req, res) => {
     try {
         const sql = "SELECT * FROM huellas ORDER BY fecha_registro DESC";
-        const [results] = await db.query(sql);
+        const { rows: results } = await pool.query(sql);
         
         res.json({
             success: true,
@@ -88,8 +88,8 @@ const verificarHuella = async (req, res) => {
             });
         }
         
-        const sql = "SELECT * FROM huellas WHERE finger_id = ?";
-        const [results] = await db.query(sql, [finger_id]);
+        const sql = "SELECT * FROM huellas WHERE finger_id = $1";
+        const { rows: results } = await pool.query(sql, [finger_id]);
         
         if (results.length > 0) {
             res.json({
@@ -126,8 +126,8 @@ const prepararRegistro = async (req, res) => {
         }
         
         // Verificar si ya está registrada
-        const checkSql = "SELECT * FROM huellas WHERE finger_id = ?";
-        const [existing] = await db.query(checkSql, [finger_id]);
+        const checkSql = "SELECT * FROM huellas WHERE finger_id = $1";
+        const { rows: existing } = await pool.query(checkSql, [finger_id]);
         
         if (existing.length > 0) {
             return res.status(400).json({
@@ -209,7 +209,7 @@ const obtenerRegistrosPorHora = async (req, res) => {
             // Filtrar por fecha específica
             sql = `
                 SELECT * FROM huellas 
-                WHERE DATE(fecha_registro) = ?
+                WHERE DATE(fecha_registro) = $1
                 ORDER BY fecha_registro DESC
             `;
             values = [fecha];
@@ -217,12 +217,12 @@ const obtenerRegistrosPorHora = async (req, res) => {
             // Últimos 7 días por defecto
             sql = `
                 SELECT * FROM huellas 
-                WHERE fecha_registro >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+                WHERE fecha_registro >= NOW() - INTERVAL '7 days'
                 ORDER BY fecha_registro DESC
             `;
         }
         
-        const [results] = await db.query(sql, values);
+        const { rows: results } = await pool.query(sql, values);
         
         res.json({
             success: true,
