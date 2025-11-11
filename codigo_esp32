@@ -1,0 +1,180 @@
+#include <WiFi.h>
+#include <HTTPClient.h>
+
+const char* ssid = "AnDrew127";
+const char* password = "holaamigo";
+const String serverURL = "http://192.168.180.197:3000/api/fingerprint";
+
+// Configurar IP estática
+IPAddress local_IP(192, 168, 180, 198);
+IPAddress gateway(192, 168, 180, 174);
+IPAddress subnet(255, 255, 255, 0);
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+  
+  Serial.println("🚀 INICIANDO DIAGNÓSTICO DE CONEXIÓN");
+  Serial.println("====================================");
+  
+  // Configurar IP estática
+  Serial.println("📡 Configurando IP estática...");
+  if (!WiFi.config(local_IP, gateway, subnet)) {
+    Serial.println("❌ Error en configuración IP estática");
+  } else {
+    Serial.println("✅ IP estática configurada");
+  }
+  
+  // Conectar WiFi
+  Serial.print("📶 Conectando a WiFi: ");
+  Serial.println(ssid);
+  
+  WiFi.begin(ssid, password);
+  
+  int intentos = 0;
+  while (WiFi.status() != WL_CONNECTED && intentos < 20) {
+    delay(1000);
+    Serial.print(".");
+    intentos++;
+  }
+  
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("\n✅ WiFi CONECTADO!");
+    Serial.print("📡 IP del ESP32: ");
+    Serial.println(WiFi.localIP());
+    Serial.print("📶 Señal WiFi: ");
+    Serial.println(WiFi.RSSI());
+    Serial.print("🔗 Gateway: ");
+    Serial.println(WiFi.gatewayIP());
+  } else {
+    Serial.println("\n❌ ERROR: No se pudo conectar al WiFi");
+    return;
+  }
+  
+  delay(2000);
+  
+  // Prueba 1: Conexión básica al servidor
+  testConexionBasica();
+  
+  // Prueba 2: Endpoint específico
+  testEndpointFingerprint();
+  
+  // Prueba 3: Endpoint de verificación
+  testEndpointVerificar();
+}
+
+void loop() {
+  // Solo mantener el loop vacío para diagnóstico
+  delay(10000);
+}
+
+void testConexionBasica() {
+  Serial.println("\n🔍 PRUEBA 1: Conexión básica al servidor");
+  Serial.println("========================================");
+  
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("❌ WiFi no conectado");
+    return;
+  }
+  
+  HTTPClient http;
+  String testURL = "http://192.168.180.197:3000/";
+  
+  Serial.print("🌐 Probando: ");
+  Serial.println(testURL);
+  
+  http.begin(testURL);
+  http.setTimeout(15000);
+  
+  int httpCode = http.GET();
+  
+  Serial.print("📥 Código HTTP: ");
+  Serial.println(httpCode);
+  
+  if (httpCode > 0) {
+    String response = http.getString();
+    Serial.println("✅ ¡SERVIDOR RESPONDE!");
+    Serial.print("📨 Respuesta (primeros 200 chars): ");
+    Serial.println(response.substring(0, 200));
+  } else {
+    Serial.println("❌ NO HAY CONEXIÓN CON EL SERVIDOR");
+    Serial.print("🔍 Error específico: ");
+    Serial.println(httpCode);
+    
+    // Diagnóstico de errores comunes
+    switch(httpCode) {
+      case -1: Serial.println("   - TIMEOUT: El servidor no responde en 15 segundos"); break;
+      case -2: Serial.println("   - URL INVÁLIDA: Revisa la IP y puerto"); break;
+      case -3: Serial.println("   - PROTOCOLO NO SOPORTADO"); break;
+      case -4: Serial.println("   - NO SE PUDO ENCABEZAR LA CONEXIÓN"); break;
+      case -5: Serial.println("   - REDIRECCIÓN DEMASIADO LARGA"); break;
+      case -6: Serial.println("   - FALLA EN CONEXIÓN TLS/SSL"); break;
+      case -7: Serial.println("   - TIEMPO DE LECTURA AGOTADO"); break;
+      case -8: Serial.println("   - PAYLOAD DEMASIADO GRANDE"); break;
+      case -9: Serial.println("   - ERROR DE ESCRITURA DE STREAM"); break;
+      case -10: Serial.println("   - ERROR DE LECTURA DE STREAM"); break;
+      default: Serial.println("   - ERROR DESCONOCIDO"); break;
+    }
+  }
+  
+  http.end();
+}
+
+void testEndpointFingerprint() {
+  Serial.println("\n🔍 PRUEBA 2: Endpoint /api/fingerprint");
+  Serial.println("======================================");
+  
+  HTTPClient http;
+  
+  Serial.print("🌐 Probando: ");
+  Serial.println(serverURL);
+  
+  http.begin(serverURL);
+  http.setTimeout(15000);
+  
+  int httpCode = http.GET();
+  
+  Serial.print("📥 Código HTTP: ");
+  Serial.println(httpCode);
+  
+  if (httpCode > 0) {
+    String response = http.getString();
+    Serial.println("✅ Endpoint responde correctamente");
+    Serial.print("📨 Respuesta: ");
+    Serial.println(response);
+  } else {
+    Serial.println("❌ Endpoint no responde");
+  }
+  
+  http.end();
+}
+
+void testEndpointVerificar() {
+  Serial.println("\n🔍 PRUEBA 3: Endpoint de verificación");
+  Serial.println("====================================");
+  
+  HTTPClient http;
+  String url = serverURL + "/verificar?finger_id=1";
+  
+  Serial.print("🌐 Probando: ");
+  Serial.println(url);
+  
+  http.begin(url);
+  http.setTimeout(15000);
+  
+  int httpCode = http.GET();
+  
+  Serial.print("📥 Código HTTP: ");
+  Serial.println(httpCode);
+  
+  if (httpCode > 0) {
+    String response = http.getString();
+    Serial.println("✅ Endpoint de verificación funciona");
+    Serial.print("📨 Respuesta: ");
+    Serial.println(response);
+  } else {
+    Serial.println("❌ Endpoint de verificación no funciona");
+  }
+  
+  http.end();
+}
